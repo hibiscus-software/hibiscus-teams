@@ -33,6 +33,6 @@ Player teams: parties with ranks, invites and allies, server teams, team chat an
 [[dependencies.${mod_id}]]
     modId="hibiscuslib"
     type="required"
-    versionRange="[1.2.0,)"
+    versionRange="[1.2.1,)"
     ordering="AFTER"
     side="BOTH"

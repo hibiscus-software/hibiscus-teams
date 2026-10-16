@@ -50,6 +50,10 @@ stores progress per team through that API.
   `HibiscusTeamsGameTests`; Hibiscus Lib's run alongside them (`neoforge.enabledGameTestNamespaces`) and must keep
   passing.
 - Changes go under `## [Unreleased]` in CHANGELOG.md as they're made.
+- Releasing: follow docs/RELEASING.md. A pushed `v<mod_version>+<minecraft_version>` tag (e.g. `v1.0.0+26.3`) runs
+  `.github/workflows/release.yml`: a GitHub Release with the jar, and CurseForge once `CURSEFORGE_PROJECT_ID` is set.
+  The README's images are crops of the screenshot harness's scale 2 shots, in `docs/images/`; refresh them when the
+  GUI changes.
 - Commits and PRs: the maintainer commits, pushes and opens PRs. Don't run `git commit`, and don't add yourself as a
   co-author; hand over a one-line commit message and the PR text instead.
 - Minecraft versions: one branch each; `main` is the newest, `mc/<major.minor>` the others. The same version number

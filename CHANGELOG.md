@@ -15,56 +15,51 @@ has the same changes.
 - **MAJOR** (1.x → 2.0.0): anything that breaks saved teams, configs or mods using Hibiscus Teams.
 
 Changes land under **Unreleased** as they're made; when a version is released, that section gets its number and
-date.
+date. How to cut a release is in [docs/RELEASING.md](docs/RELEASING.md).
 
 ## [Unreleased]
 
+Suggested version: **1.0.0** (the first release).
+
+The first release of Hibiscus Teams, for Minecraft 26.3. Needs Hibiscus Lib 1.2.1 or newer.
+
 ### Added
 
-- Teams: every player has a player team (its id is the player's UUID); players can create **parties** with an owner,
-  officers and members, and ops can create **server teams** with no owner. Team properties: name (unique, 1-32
-  characters), tag (1-5 characters), colour, description, icon, free to join, member limit, ally requests on/off,
-  friendly fire, team chat by default, and for server teams, locked.
-- Invites (with an expiry time), free-to-join parties, leaving, kicking (only players ranked below you), promoting and
-  demoting (owner only), transferring ownership, disbanding. An owner can't leave without transferring or disbanding
-  first.
-- Allies (request and accept, between parties) and enemies.
-- Friendly fire: players in the same team can't hurt each other unless the team allows it, optionally allies too.
-- Commands, `/hibiscusteams` and its alias `/teams`: `party create|invite|join|accept|decline|leave|kick|promote|
-  demote|transfer_owner|settings|disband`, `allies list|add|remove|accept|decline`, `enemies list|add|remove`,
-  `info`, `list`, `msg`, `chat`, and for ops `server create|delete|add|remove|settings` and
-  `admin force_join|force_leave|rename|disband|reload|export`. Messages are translatable, with clickable
-  `[Accept]`-style buttons and names that show details on hover; team arguments are suggested (quoted when needed).
-- Permission nodes `hibiscusteams.admin.server`, `.members`, `.rename`, `.disband`, `.reload` and `.export`, granted
-  to ops (level 2) by default.
-- The Hibiscus Lib Teams API: `TeamsApi.get()` is Hibiscus Teams once it loads, with every event posted in Lib's
-  documented order, and `extraData` saved with each team. On the first start in a world, players' names and data kept
-  by Lib's solo-team fallback are copied into their player teams.
-- Saving: one SNBT file per team in `<world>/hibiscusteams/`, saved shortly after each change and when the server
-  stops; a file that won't load is reported and left untouched.
-- Server config `hibiscusteams-server.toml`: parties on/off, member limit, name length, free-to-join on/off, invite
-  expiry, allies on/off, and whether allies count for friendly fire.
-- Game tests for the team rules, the Teams API events and persistence, the fallback migration, and the commands.
-- The Teams screen, opened from a button beside the inventory (with an unbound key mapping, and a badge counting
-  pending invites, plus ally requests for officers). On your own: create a party (name, colour, icon from your
-  inventory, free to join), or accept, decline or join from a list of your invites and open parties. In a party or
-  server team: a Members tab (faces with an online dot, ranks, pending invites; right-click for promote, demote, make
-  owner, remove, message; an Invite dialog for online players or any name), an Allies tab (allies, ally requests both
-  ways, enemies; an Add dialog to ask a party to ally or mark it an enemy) and a Settings tab (every property, saved
-  together; read-only for members, and for server teams unless you're an admin; Leave and a type-the-name Disband).
-  The screen updates live as the team changes.
-- Toasts for party invites, new members, being removed, ally requests, new owners and disbanded parties, and the same
-  news in chat with its buttons. Each player chooses toasts and/or chat in `hibiscusteams-client.toml`.
-- The client side of the Teams API (`ClientTeams`): the player's own team in full and every party and server team's
-  summary, kept in sync by the server, which only sends what changed.
+- **Teams.** Every player has their own player team. Players create **parties** with an owner, officers and members;
+  admins create **server teams**, which have no owner and can be locked so members can't leave. Team settings: a
+  unique name, a 1-5 character tag, colour, description, an item icon, free to join, member limit, whether the team
+  takes ally requests, friendly fire, and team chat by default.
+- **Invites, ranks and ownership.** Invites to online or offline players, which expire; free-to-join parties and
+  member limits; officers invite and remove members ranked below them; the owner promotes, demotes, hands over
+  ownership and disbands (and can't leave without doing one of the last two). When an admin removes an owner, the
+  party passes to the first officer, else the first member, or is deleted when it's empty.
+- **Allies and enemies.** Parties ask to be allies and accept or decline; any party can mark another an enemy.
+- **Friendly fire.** Members of a team can't hurt each other unless the team allows it; optionally allies are
+  protected too.
+- **Team chat.** `/teams msg`, and team chat as a member's default (the team's setting, or their own `/teams chat`);
+  a message starting with `!` goes to everyone.
+- **Tags and colours.** A member's `[TAG]` before their name in chat, and through a mirror of the teams on the vanilla
+  scoreboard, in the player list and above their head, with names in the team's colour. Vanilla clients and other
+  mods see the mirrored teams.
+- **The Teams screen**, from a button by the inventory (with a badge for invites and ally requests, and an Open Teams
+  key mapping): create, join and answer invites when you're on your own; in a team, the Members tab (faces with an
+  online dot, ranks, a right-click menu, an Invite dialog), the Allies tab (requests both ways, allies, enemies) and
+  the Settings tab (every setting, read-only for members; leave and a type-the-name disband). It updates live.
+- **Toasts and chat messages** for invites, new members, removals, ally requests, new owners and disbanded parties,
+  with clickable `[Accept]` buttons in chat. Each player picks toasts, chat or both.
+- **Commands:** `/hibiscusteams` (alias `/teams`) with `party`, `allies`, `enemies`, `info`, `list`, `msg` and
+  `chat` for players, and `server` and `admin` (force join and leave, rename, disband, reload, export) for admins,
+  behind the permission nodes `hibiscusteams.admin.server`, `.members`, `.rename`, `.disband`, `.reload` and
+  `.export` (ops by default). Translatable output, clickable buttons and names, and suggestions for every argument.
+- **Saving:** one readable SNBT file per team in `<world>/hibiscusteams/`, written safely with a backup shortly after
+  each change and when the server stops. A file that won't load is reported and left untouched.
+- **Configuration:** `hibiscusteams-server.toml` (parties, member limit, name length, free to join, invite expiry,
+  allies, friendly fire for allies, tags, team chat, the scoreboard mirror and name colours) and
+  `hibiscusteams-client.toml` (toasts and chat messages).
+- **The Hibiscus Lib Teams API**, implemented: `TeamsApi.get()` is Hibiscus Teams, every Teams API event is posted in
+  Lib's documented order, other mods' `extraData` is saved with each team, and `ClientTeams` knows the player's team
+  and every party and server team. The first time it runs in a world, the names and data Hibiscus Lib kept for each
+  player are copied into their player team.
 - A mod list icon and banner.
-- Game tests for what each player is sent and for the network payloads.
-- Team chat: with team chat as their default (the party's `team_chat_default`, or their own `/teams chat` or the
-  screen's switch), a member's chat goes to their team; starting a message with `!` sends it to everyone.
-  `chat.teamChatEnabled` turns team chat off for the whole server.
-- Team tags: a member's `[TAG]`, in their team's colour, before their name (`chat.showTag`).
-- The scoreboard mirror (`display.scoreboardMirror`): each party and server team has a vanilla scoreboard team
-  (named `hbt_` and part of its id) holding its members, so the player list, name tags, vanilla clients and other mods
-  see the teams, with the tag as the prefix and, with `display.nameTagColors`, names in the nearest vanilla team
-  colour. Switching it off removes the mirrored teams and leaves the scoreboard alone.
-- Game tests for the scoreboard mirror, the tag and team chat.
+
+[Unreleased]: https://github.com/hibiscus-software/hibiscus-teams/commits/main
