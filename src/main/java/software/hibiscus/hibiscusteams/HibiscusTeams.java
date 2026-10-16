@@ -48,7 +48,7 @@ public class HibiscusTeams {
     public HibiscusTeams(IEventBus modEventBus, ModContainer modContainer) {
         TeamsApi.install(TeamManagerImpl.INSTANCE, MODID);
         // SYNCED is 26.3's server config: loaded as the server starts (a world's syncedconfig/ copy wins) and sent to clients.
-        modContainer.registerConfig(ModConfig.Type.SYNCED, TeamsConfig.SPEC, MODID + "-server.toml");
+        modContainer.registerConfig(syncedConfigType(), TeamsConfig.SPEC, MODID + "-server.toml");
         TeamPermissions.init();
         HibiscusTeamsGameTests.register(modEventBus);
         TeamNetwork.register(modEventBus);
@@ -76,6 +76,17 @@ public class HibiscusTeams {
             LOGGER.warn("FTB Teams is installed too. Hibiscus Teams doesn't bridge to it: the two keep separate teams, "
                     + "and mods using the Hibiscus Lib Teams API see only Hibiscus Teams'.");
         }
+    }
+
+    // FML 12.0.8 (NeoForge 26.3.0.37-beta) renamed the server config type SERVER to SYNCED. Looked up by name so the
+    // mod runs on every 26.3 build, before and after the rename.
+    private static ModConfig.Type syncedConfigType() {
+        for (ModConfig.Type type : ModConfig.Type.values()) {
+            if (type.name().equals("SYNCED")) {
+                return type;
+            }
+        }
+        return ModConfig.Type.valueOf("SERVER");
     }
 
     private static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {

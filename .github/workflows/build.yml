@@ -42,6 +42,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.HIBISCUS_PACKAGES_TOKEN || github.token }}
         run: ./gradlew runGameTestServer
 
+      # The classes just compiled, run on the oldest NeoForge in neo_version_range without recompiling, so a call
+      # that newer builds changed shows up as a linkage error.
+      - name: Run game tests on the oldest NeoForge
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.HIBISCUS_PACKAGES_TOKEN || github.token }}
+        run: ./gradlew runGameTestServer -x compileJava -Pneo_version=26.3.0.0-beta
+
       # Every build's jar, downloadable from the run's Summary page for 30 days.
       - name: Upload jar
         uses: actions/upload-artifact@v4

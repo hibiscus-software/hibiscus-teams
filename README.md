@@ -5,7 +5,7 @@ server teams run by the admins, team chat, team tags and colours, and friendly f
 inventory or a full command set. Built on [Hibiscus Lib](https://github.com/hibiscus-software/hibiscus-lib), whose
 Teams API it implements, so mods such as Hibiscus Quests keep their progress per team.
 
-- **Requires:** NeoForge 26.3.0.84 or newer, Java 25, and Hibiscus Lib 1.2.1 or newer, on the server and every client.
+- **Requires:** NeoForge 26.3.0.0-beta or newer (every 26.3 build), Java 25, and Hibiscus Lib 1.2.1 or newer, on the server and every client.
 - **License:** MIT.
 
 ![The Members tab](docs/images/members.png)
