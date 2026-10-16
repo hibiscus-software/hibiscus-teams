@@ -19,7 +19,7 @@ date. How to cut a release is in [docs/RELEASING.md](docs/RELEASING.md).
 
 ## [Unreleased]
 
-Suggested version: **1.0.0** (the first release).
+## [1.0.0] - 2026-10-16
 
 The first release of Hibiscus Teams, for Minecraft 26.3. Needs Hibiscus Lib 1.2.1 or newer.
 
@@ -62,4 +62,5 @@ The first release of Hibiscus Teams, for Minecraft 26.3. Needs Hibiscus Lib 1.2.
   player are copied into their player team.
 - A mod list icon and banner.
 
-[Unreleased]: https://github.com/hibiscus-software/hibiscus-teams/commits/main
+[Unreleased]: https://github.com/hibiscus-software/hibiscus-teams/compare/v1.0.0+26.3...HEAD
+[1.0.0]: https://github.com/hibiscus-software/hibiscus-teams/commits/v1.0.0+26.3
