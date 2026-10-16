@@ -1,0 +1,26 @@
+license="${mod_license}"
+issueTrackerURL="https://github.com/hibiscus-software/hibiscus-teams/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+displayURL="https://github.com/hibiscus-software/hibiscus-teams"
+authors="Hibiscus Software"
+description='''
+Teams for Minecraft.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
