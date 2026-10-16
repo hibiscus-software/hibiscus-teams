@@ -43,12 +43,16 @@ jobs:
         run: ./gradlew runGameTestServer
 
       # The classes just compiled, run on the oldest NeoForge in neo_version_range without recompiling, so a call
-      # that newer builds changed shows up as a linkage error.
+      # that newer builds changed shows up as a linkage error. The Minecraft workspace is set up afresh, without the
+      # build or configuration cache: otherwise the one made for neo_version comes back from the cache and the run
+      # fails with a NoClassDefFoundError for a newer NeoForge interface.
       - name: Run game tests on the oldest NeoForge
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.HIBISCUS_PACKAGES_TOKEN || github.token }}
-        run: ./gradlew runGameTestServer -x compileJava -Pneo_version=26.3.0.0-beta
+        run: |
+          rm -rf build/neoForm
+          ./gradlew runGameTestServer -x compileJava -Pneo_version=26.3.0.0-beta --no-configuration-cache --no-build-cache
 
       # Every build's jar, downloadable from the run's Summary page for 30 days.
       - name: Upload jar

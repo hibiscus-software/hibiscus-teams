@@ -45,9 +45,11 @@ stores progress per team through that API.
   `SYNCED` (the server config) and `STARTUP`. When unsure, grep the decompiled sources (unzip
   `build/neoForm/neoFormJoined26.3-1/steps/patchUserDev/outputs.jar`), Hibiscus Lib or Arcforge.
 - NeoForge range: the jar declares every 26.3 build from 26.3.0.0-beta (`neo_version_range`) while compiling against
-  `neo_version`. To check an older build, run the already compiled classes on it:
-  `./gradlew runGameTestServer -x compileJava -Pneo_version=26.3.0.0-beta` (add `runScreenshotClient -x
-  compileScreenshotsJava` for GUI changes). Something that differs between builds is looked up by name, as
+  `neo_version`. To check an older build, run the already compiled classes on it in a fresh Minecraft workspace:
+  `rm -rf build/neoForm` then `./gradlew runGameTestServer -x compileJava -Pneo_version=26.3.0.0-beta
+  --no-configuration-cache --no-build-cache` (add `runScreenshotClient -x compileScreenshotsJava` for GUI changes).
+  Otherwise the workspace made for `neo_version` can come back from the cache and the run fails with a
+  NoClassDefFoundError. Something that differs between builds is looked up by name, as
   `HibiscusTeams.syncedConfigType()` does for `ModConfig.Type.SYNCED` (`SERVER` before 26.3.0.37-beta).
 - Item stacks can't be made during mod construction or client setup in 26.3 (data components aren't bound yet): use
   suppliers.

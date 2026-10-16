@@ -19,6 +19,10 @@ date. How to cut a release is in [docs/RELEASING.md](docs/RELEASING.md).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-16
+
+Needs Hibiscus Lib 1.4.1 or newer.
+
 ### Changed
 
 - **Runs on every NeoForge 26.3 build**, from 26.3.0.0-beta to the newest; it needed 26.3.0.84 or later before.
@@ -66,5 +70,6 @@ The first release of Hibiscus Teams, for Minecraft 26.3. Needs Hibiscus Lib 1.2.
   player are copied into their player team.
 - A mod list icon and banner.
 
-[Unreleased]: https://github.com/hibiscus-software/hibiscus-teams/compare/v1.0.0+26.3...HEAD
+[Unreleased]: https://github.com/hibiscus-software/hibiscus-teams/compare/v1.0.1+26.3...HEAD
+[1.0.1]: https://github.com/hibiscus-software/hibiscus-teams/compare/v1.0.0+26.3...v1.0.1+26.3
 [1.0.0]: https://github.com/hibiscus-software/hibiscus-teams/commits/v1.0.0+26.3
