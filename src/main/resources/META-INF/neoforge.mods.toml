@@ -7,6 +7,10 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="Hibiscus Software"
 displayURL="https://github.com/hibiscus-software/hibiscus-teams"
+# The mod list's square icon (left) and banner (right), at the jar root. Pixel art, so no blur when scaled.
+iconFile="hibiscusteams_icon.png"
+bannerFile="hibiscusteams_banner.png"
+iconBlur=false
 description='''
 Player teams: parties with ranks, invites and allies, server teams, team chat and friendly fire, through a small GUI and a full command set. Implements the Hibiscus Lib Teams API.
 '''
@@ -29,6 +33,6 @@ Player teams: parties with ranks, invites and allies, server teams, team chat an
 [[dependencies.${mod_id}]]
     modId="hibiscuslib"
     type="required"
-    versionRange="[1.1.0,)"
+    versionRange="[1.2.0,)"
     ordering="AFTER"
     side="BOTH"

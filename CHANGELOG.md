@@ -45,3 +45,17 @@ date.
 - Server config `hibiscusteams-server.toml`: parties on/off, member limit, name length, free-to-join on/off, invite
   expiry, allies on/off, and whether allies count for friendly fire.
 - Game tests for the team rules, the Teams API events and persistence, the fallback migration, and the commands.
+- The Teams screen, opened from a button beside the inventory (with an unbound key mapping, and a badge counting
+  pending invites, plus ally requests for officers). On your own: create a party (name, colour, icon from your
+  inventory, free to join), or accept, decline or join from a list of your invites and open parties. In a party or
+  server team: a Members tab (faces with an online dot, ranks, pending invites; right-click for promote, demote, make
+  owner, remove, message; an Invite dialog for online players or any name), an Allies tab (allies, ally requests both
+  ways, enemies; an Add dialog to ask a party to ally or mark it an enemy) and a Settings tab (every property, saved
+  together; read-only for members, and for server teams unless you're an admin; Leave and a type-the-name Disband).
+  The screen updates live as the team changes.
+- Toasts for party invites, new members, being removed, ally requests, new owners and disbanded parties, and the same
+  news in chat with its buttons. Each player chooses toasts and/or chat in `hibiscusteams-client.toml`.
+- The client side of the Teams API (`ClientTeams`): the player's own team in full and every party and server team's
+  summary, kept in sync by the server, which only sends what changed.
+- A mod list icon and banner.
+- Game tests for what each player is sent and for the network payloads.

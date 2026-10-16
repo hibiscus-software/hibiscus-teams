@@ -40,12 +40,13 @@ public final class TeamMessages {
         INFO
     }
 
-    // Where notifications go besides chat; the client sync replaces it to also show toasts.
+    // Where notifications go; the client sync replaces it to also show toasts. `toast` is the message shortened for a
+    // toast's one line (no [Accept] buttons, which can't be clicked there).
     public interface Sink {
-        void send(ServerPlayer player, Kind kind, Component message);
+        void send(ServerPlayer player, Kind kind, Component message, Component toast);
     }
 
-    private static volatile Sink sink = (player, kind, message) -> player.sendSystemMessage(message);
+    private static volatile Sink sink = (player, kind, message, toast) -> player.sendSystemMessage(message);
 
     private TeamMessages() {}
 
@@ -95,9 +96,13 @@ public final class TeamMessages {
     // ---- Sending ----
 
     public static void send(MinecraftServer server, UUID player, Kind kind, Component message) {
+        send(server, player, kind, message, message);
+    }
+
+    public static void send(MinecraftServer server, UUID player, Kind kind, Component message, Component toast) {
         ServerPlayer online = server.getPlayerList().getPlayer(player);
         if (online != null) {
-            sink.send(online, kind, message);
+            sink.send(online, kind, message, toast);
         }
     }
 
@@ -105,16 +110,20 @@ public final class TeamMessages {
     public static void toTeam(MinecraftServer server, TeamData team, Kind kind, Component message, @Nullable UUID except) {
         for (ServerPlayer member : team.onlineMembers(server)) {
             if (!member.getUUID().equals(except)) {
-                sink.send(member, kind, message);
+                sink.send(member, kind, message, message);
             }
         }
     }
 
     // To the online owner and officers, who can act on invites and ally requests.
     public static void toOfficers(MinecraftServer server, TeamData team, Kind kind, Component message) {
+        toOfficers(server, team, kind, message, message);
+    }
+
+    public static void toOfficers(MinecraftServer server, TeamData team, Kind kind, Component message, Component toast) {
         for (ServerPlayer member : team.onlineMembers(server)) {
             if (team.memberRank(member.getUUID()).isAtLeast(TeamRank.OFFICER)) {
-                sink.send(member, kind, message);
+                sink.send(member, kind, message, toast);
             }
         }
     }

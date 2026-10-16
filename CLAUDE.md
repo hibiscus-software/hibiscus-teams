@@ -16,7 +16,9 @@ stores progress per team through that API.
   `-Phibiscuslib_dir=...`).
 - Layout: `team/` is the server side (`TeamData` the Team, `TeamManagerImpl` the TeamManager and saving,
   `TeamStorage` the files, `TeamOps` every change with its checks and events, `TeamSetting` the editable
-  properties), `command/` the commands, `config/` the server config, `gametest/` the tests.
+  properties), `command/` the commands, `config/` the server config, `network/` the payloads, the GUI requests'
+  handling (`TeamNetwork`) and the client sync (`TeamSync`, which sends each player only what changed), `client/` the
+  client state (`ClientTeamState`, also the `ClientTeams` provider), config and screens, `gametest/` the tests.
 - Server-authoritative: every change goes through `TeamOps` (commands and GUI payloads alike), which checks rank,
   admin permission and rate, then changes, posts the Teams API events in Lib's documented order, saves and syncs.
   Clients never decide what a player may do.
@@ -28,6 +30,12 @@ stores progress per team through that API.
 - Dedicated servers: no client classes on the server. Client code lives under `client/` and is only reached from
   `HibiscusTeamsClient` (`@Mod(dist = Dist.CLIENT)`).
 - Every user-facing string goes through `assets/hibiscusteams/lang/en_us.json`.
+- GUI: build on Hibiscus Lib's widgets and theme. Screens rebuild on every sync, so keep their state (tab, selection,
+  unsaved settings) in fields, not widgets. Check every change with `./gradlew runScreenshotClient` (source set
+  `src/screenshots`, never in a jar): it opens a flat creative world, sets up demo teams, screenshots every screen
+  state at GUI scales 1-3 on 1280x720 and scale 4 on 1440x960 into `run/screenshotClient/screenshots/`, and quits.
+  The smallest GUI to fit is 427x240 (scale 3 on 1280x720). The inventory button's sprite comes from
+  `tools/gui_sprite_gen.py`.
 - Comments: a short comment above each class and non-obvious method saying what it's for, as in the code already.
 - License header on every Java file (the MIT block comment at the top of the existing sources).
 - 26.3 names: `Identifier` (not ResourceLocation), `GuiGraphicsExtractor` with `extractRenderState` /

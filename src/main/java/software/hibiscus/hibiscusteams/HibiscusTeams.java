@@ -28,13 +28,15 @@ import software.hibiscus.hibiscusteams.command.TeamPermissions;
 import software.hibiscus.hibiscusteams.command.TeamsCommand;
 import software.hibiscus.hibiscusteams.config.TeamsConfig;
 import software.hibiscus.hibiscusteams.gametest.HibiscusTeamsGameTests;
+import software.hibiscus.hibiscusteams.network.TeamNetwork;
+import software.hibiscus.hibiscusteams.network.TeamSync;
 import software.hibiscus.hibiscusteams.team.FriendlyFire;
 import software.hibiscus.hibiscusteams.team.TeamManagerImpl;
 import software.hibiscus.hibiscusteams.team.TeamOps;
 
 // Hibiscus Teams' common entrypoint (both sides). Must match the modId in META-INF/neoforge.mods.toml. Installs the
 // Teams API implementation (replacing Hibiscus Lib's solo-team fallback; Lib constructs first, see ordering="AFTER")
-// and hooks the server lifecycle, logins, commands and friendly fire.
+// and hooks the server lifecycle, logins, commands, friendly fire, and the network and client sync.
 @Mod(HibiscusTeams.MODID)
 public class HibiscusTeams {
     public static final String MODID = "hibiscusteams";
@@ -46,10 +48,18 @@ public class HibiscusTeams {
         modContainer.registerConfig(ModConfig.Type.SYNCED, TeamsConfig.SPEC, MODID + "-server.toml");
         TeamPermissions.init();
         HibiscusTeamsGameTests.register(modEventBus);
+        TeamNetwork.register(modEventBus);
+        TeamSync.register();
 
         NeoForge.EVENT_BUS.addListener((ServerStartingEvent event) -> TeamManagerImpl.INSTANCE.start(event.getServer()));
-        NeoForge.EVENT_BUS.addListener((ServerStoppingEvent event) -> TeamManagerImpl.INSTANCE.stop());
-        NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> TeamManagerImpl.INSTANCE.tick());
+        NeoForge.EVENT_BUS.addListener((ServerStoppingEvent event) -> {
+            TeamManagerImpl.INSTANCE.stop();
+            TeamSync.onServerStop();
+        });
+        NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
+            TeamManagerImpl.INSTANCE.tick();
+            TeamSync.tick(event.getServer());
+        });
         NeoForge.EVENT_BUS.addListener(HibiscusTeams::onLogin);
         NeoForge.EVENT_BUS.addListener(HibiscusTeams::onLogout);
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> TeamsCommand.register(event.getDispatcher()));
@@ -64,11 +74,16 @@ public class HibiscusTeams {
     private static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             TeamManagerImpl.INSTANCE.onLogin(player);
+            TeamSync.onLogin(player);
         }
     }
 
     private static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         TeamOps.forget(event.getEntity().getUUID());
+        TeamNetwork.forget(event.getEntity().getUUID());
+        if (event.getEntity() instanceof ServerPlayer player) {
+            TeamSync.onLogout(player);
+        }
     }
 
     public static Identifier id(String path) {

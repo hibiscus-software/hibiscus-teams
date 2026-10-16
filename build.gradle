@@ -12,6 +12,14 @@ tasks.named('wrapper', Wrapper).configure {
 version = "${mod_version}+${minecraft_version}"
 group = mod_group_id
 
+sourceSets {
+    // Development only, never in a jar: the screenshot harness run by runScreenshotClient (see ScreenshotHarness).
+    screenshots {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+
 sourceSets.main.resources {
     srcDir('src/generated/resources')
 
@@ -66,6 +74,15 @@ runs {
     // Launches GameTestServer, runs every registered gametest, then exits.
     gameTestServer {
         systemProperty 'neoforge.enabledGameTestNamespaces', gameTestNamespaces
+    }
+
+    // Opens a flat creative world, puts every Teams screen state on screen at each GUI scale, saves screenshots to
+    // run/screenshotClient/screenshots/, then quits. The README's images come from here.
+    screenshotClient {
+        runType 'client'
+        modSource project.sourceSets.screenshots
+        systemProperty 'hibiscusteams.screenshots', 'true'
+        programArguments.addAll '--width', '1280', '--height', '720'
     }
 
     clientData {

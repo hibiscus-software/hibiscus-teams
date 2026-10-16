@@ -54,6 +54,8 @@ public final class HibiscusTeamsGameTests {
         TESTS.put("fallback_migrated", TeamsCoreGameTests::fallbackMigrated);
         TESTS.put("broken_file_untouched", TeamsCoreGameTests::brokenFileUntouched);
         TESTS.put("command_flow", CommandGameTests::commandFlow);
+        TESTS.put("sync_view_follows_rank", SyncGameTests::viewFollowsRank);
+        TESTS.put("sync_payloads_round_trip", SyncGameTests::payloadsRoundTrip);
         TESTS.forEach((name, test) -> FUNCTIONS.register(name, () -> test));
     }
 

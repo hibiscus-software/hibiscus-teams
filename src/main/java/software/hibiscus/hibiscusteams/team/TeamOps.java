@@ -212,12 +212,13 @@ public final class TeamOps {
         teams().changed(party);
 
         String quoted = TeamMessages.quote(party.name());
+        Component toast = msg("invited", name(inviter), TeamMessages.team(party));
         Component invite = msg("invited", name(inviter), TeamMessages.team(party))
                 .append(" ")
                 .append(TeamMessages.button("hibiscusteams.button.accept", ChatFormatting.GREEN, TeamMessages.command("party accept " + quoted), null))
                 .append(" ")
                 .append(TeamMessages.button("hibiscusteams.button.decline", ChatFormatting.RED, TeamMessages.command("party decline " + quoted), null));
-        TeamMessages.send(server(), target, Kind.INVITED, invite);
+        TeamMessages.send(server(), target, Kind.INVITED, invite, toast);
         TeamMessages.toOfficers(server(), party, Kind.INFO, msg("invite_sent_team", name(inviter), name(target)));
         return msg("invite_sent", name(target), TeamMessages.team(party));
     }
@@ -576,12 +577,13 @@ public final class TeamOps {
         target.putAllyRequest(party.id(), expiresAt());
         teams().changed(target);
         String quoted = TeamMessages.quote(party.name());
+        Component toast = msg("ally_request", TeamMessages.team(party));
         Component request = msg("ally_request", TeamMessages.team(party))
                 .append(" ")
                 .append(TeamMessages.button("hibiscusteams.button.accept", ChatFormatting.GREEN, TeamMessages.command("allies accept " + quoted), null))
                 .append(" ")
                 .append(TeamMessages.button("hibiscusteams.button.decline", ChatFormatting.RED, TeamMessages.command("allies decline " + quoted), null));
-        TeamMessages.toOfficers(server(), target, Kind.ALLY_REQUEST, request);
+        TeamMessages.toOfficers(server(), target, Kind.ALLY_REQUEST, request, toast);
         return msg("ally_request_sent", TeamMessages.team(target));
     }
 
