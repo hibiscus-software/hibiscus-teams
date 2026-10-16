@@ -684,10 +684,11 @@ public final class TeamOps {
 
     // ---- Team chat ----
 
-    // Whether a player's chat goes to their team by default: their own toggle, else their party's setting.
+    // Whether a player's chat goes to their team by default: their own toggle, else their party's setting (never
+    // while the server has team chat off).
     public static boolean teamChatByDefault(UUID player) {
         TeamData team = teams().teamOf(player);
-        if (team.type().isPlayer()) {
+        if (team.type().isPlayer() || !TeamsConfig.CHAT_TEAM_CHAT_ENABLED.getAsBoolean()) {
             return false;
         }
         return teams().playerTeam(player).teamChat().orElse(team.teamChatDefault());
@@ -695,6 +696,9 @@ public final class TeamOps {
 
     // Flips a player's team chat default; returns the new setting.
     public static boolean toggleTeamChat(UUID player) {
+        if (!TeamsConfig.CHAT_TEAM_CHAT_ENABLED.getAsBoolean()) {
+            throw TeamException.of("team_chat_disabled");
+        }
         if (teams().teamOf(player).type().isPlayer()) {
             throw TeamException.of("not_in_party");
         }

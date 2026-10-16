@@ -59,3 +59,12 @@ date.
   summary, kept in sync by the server, which only sends what changed.
 - A mod list icon and banner.
 - Game tests for what each player is sent and for the network payloads.
+- Team chat: with team chat as their default (the party's `team_chat_default`, or their own `/teams chat` or the
+  screen's switch), a member's chat goes to their team; starting a message with `!` sends it to everyone.
+  `chat.teamChatEnabled` turns team chat off for the whole server.
+- Team tags: a member's `[TAG]`, in their team's colour, before their name (`chat.showTag`).
+- The scoreboard mirror (`display.scoreboardMirror`): each party and server team has a vanilla scoreboard team
+  (named `hbt_` and part of its id) holding its members, so the player list, name tags, vanilla clients and other mods
+  see the teams, with the tag as the prefix and, with `display.nameTagColors`, names in the nearest vanilla team
+  colour. Switching it off removes the mirrored teams and leaves the scoreboard alone.
+- Game tests for the scoreboard mirror, the tag and team chat.

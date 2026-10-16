@@ -303,8 +303,10 @@ public class TeamsScreen extends BaseScreen {
             invite.withTooltip(t(mine.type() == TeamType.PARTY ? "members.invite.officers" : "members.invite.server"));
         }
         int toggleWidth = Math.min(120, innerWidth() - 96);
-        addRenderableWidget(new ToggleButton(left() + innerWidth() - toggleWidth, buttonsY + 2, toggleWidth, t("members.team_chat"),
-                mine.teamChat(), value -> send(TeamPayloads.Request.of(Action.TEAM_CHAT)))).withTooltip(t("members.team_chat.tooltip"));
+        ToggleButton teamChat = addRenderableWidget(new ToggleButton(left() + innerWidth() - toggleWidth, buttonsY + 2, toggleWidth,
+                t("members.team_chat"), mine.teamChat(), value -> send(TeamPayloads.Request.of(Action.TEAM_CHAT))));
+        teamChat.active = view.info().teamChatEnabled();
+        teamChat.withTooltip(t(teamChat.active ? "members.team_chat.tooltip" : "members.team_chat.disabled"));
     }
 
     private static Optional<TeamViews.Pending> invite(TeamViews.Details mine, UUID id) {

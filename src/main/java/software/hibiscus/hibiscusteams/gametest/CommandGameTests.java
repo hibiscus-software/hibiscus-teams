@@ -36,7 +36,7 @@ final class CommandGameTests {
 
     // A logged-in mock player with their own name (the gametest helper names every mock player the same, and these
     // commands find players by name).
-    private static ServerPlayer namedPlayer(GameTestHelper helper, String name) {
+    static ServerPlayer namedPlayer(GameTestHelper helper, String name) {
         MinecraftServer server = helper.getLevel().getServer();
         CommonListenerCookie cookie = CommonListenerCookie.createInitial(new GameProfile(UUID.randomUUID(), name), false);
         ServerPlayer player = new ServerPlayer(server, helper.getLevel(), cookie.gameProfile(), cookie.clientInformation()) {

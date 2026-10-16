@@ -175,7 +175,7 @@ public final class TeamSync {
         TeamViews.ServerInfo info = new TeamViews.ServerInfo(TeamsConfig.PARTIES_ENABLED.getAsBoolean(),
                 TeamsConfig.ALLIES_ENABLED.getAsBoolean(), TeamsConfig.PARTIES_ALLOW_FREE_TO_JOIN.getAsBoolean(),
                 TeamsConfig.PARTIES_NAME_MAX_LENGTH.getAsInt(), TeamsConfig.PARTIES_MAX_MEMBERS.getAsInt(),
-                PermissionLevels.check(player, TeamPermissions.SERVER_TEAMS));
+                TeamsConfig.CHAT_TEAM_CHAT_ENABLED.getAsBoolean(), PermissionLevels.check(player, TeamPermissions.SERVER_TEAMS));
         return new TeamViews.PlayerView(details, invites, info);
     }
 

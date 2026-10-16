@@ -56,6 +56,10 @@ public final class HibiscusTeamsGameTests {
         TESTS.put("command_flow", CommandGameTests::commandFlow);
         TESTS.put("sync_view_follows_rank", SyncGameTests::viewFollowsRank);
         TESTS.put("sync_payloads_round_trip", SyncGameTests::payloadsRoundTrip);
+        TESTS.put("scoreboard_mirror", IntegrationGameTests::scoreboardMirror);
+        TESTS.put("chat_tag", IntegrationGameTests::chatTag);
+        TESTS.put("team_chat_redirect", IntegrationGameTests::teamChatRedirect);
+        TESTS.put("nearest_team_color", IntegrationGameTests::nearestColor);
         TESTS.forEach((name, test) -> FUNCTIONS.register(name, () -> test));
     }
 

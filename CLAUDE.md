@@ -18,7 +18,8 @@ stores progress per team through that API.
   `TeamStorage` the files, `TeamOps` every change with its checks and events, `TeamSetting` the editable
   properties), `command/` the commands, `config/` the server config, `network/` the payloads, the GUI requests'
   handling (`TeamNetwork`) and the client sync (`TeamSync`, which sends each player only what changed), `client/` the
-  client state (`ClientTeamState`, also the `ClientTeams` provider), config and screens, `gametest/` the tests.
+  client state (`ClientTeamState`, also the `ClientTeams` provider), config and screens, `integration/` chat (team
+  chat redirect, the [TAG] on names) and the vanilla scoreboard mirror, `gametest/` the tests.
 - Server-authoritative: every change goes through `TeamOps` (commands and GUI payloads alike), which checks rank,
   admin permission and rate, then changes, posts the Teams API events in Lib's documented order, saves and syncs.
   Clients never decide what a player may do.

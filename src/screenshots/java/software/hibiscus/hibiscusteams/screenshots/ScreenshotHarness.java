@@ -276,6 +276,15 @@ public final class ScreenshotHarness {
             // Owner of a full party.
             onServer(minecraft, server -> partyScene(server, self));
             clearToasts(minecraft);
+
+            // Chat: a public message with the party tag before the name, then a team chat message.
+            then(() -> {
+                minecraft.gui.setScreen(null);
+                minecraft.gui.hud.getChat().clearMessages(false);
+                minecraft.player.connection.sendChat("Anyone up for the reef raid tonight?");
+            }, 10);
+            then(() -> minecraft.player.connection.sendCommand("teams msg Meet at the boathouse at 8."), 20);
+            shot("chat_" + tag);
             then(() -> minecraft.gui.setScreen(new TeamsScreen(null)), 10);
             shot("members_" + tag);
             then(() -> {

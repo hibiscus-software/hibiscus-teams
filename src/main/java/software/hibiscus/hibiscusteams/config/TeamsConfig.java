@@ -20,6 +20,10 @@ public final class TeamsConfig {
     public static final ModConfigSpec.IntValue INVITES_EXPIRE_MINUTES;
     public static final ModConfigSpec.BooleanValue ALLIES_ENABLED;
     public static final ModConfigSpec.BooleanValue ALLIES_COUNT_FOR_FRIENDLY_FIRE;
+    public static final ModConfigSpec.BooleanValue CHAT_SHOW_TAG;
+    public static final ModConfigSpec.BooleanValue CHAT_TEAM_CHAT_ENABLED;
+    public static final ModConfigSpec.BooleanValue DISPLAY_SCOREBOARD_MIRROR;
+    public static final ModConfigSpec.BooleanValue DISPLAY_NAME_TAG_COLORS;
 
     static {
         BUILDER.push("parties");
@@ -50,6 +54,29 @@ public final class TeamsConfig {
         ALLIES_COUNT_FOR_FRIENDLY_FIRE = BUILDER
                 .comment("Whether a party's friendly_fire setting also covers its allies' members.")
                 .define("countForFriendlyFire", false);
+        BUILDER.pop();
+
+        BUILDER.push("chat");
+        CHAT_SHOW_TAG = BUILDER
+                .comment("Show a party or server team member's [TAG], in their team's colour, before their name: in chat, and with",
+                        "the scoreboard mirror on, in the player list and above their head too.")
+                .define("showTag", true);
+        CHAT_TEAM_CHAT_ENABLED = BUILDER
+                .comment("Allow team chat: /teams msg, /teams chat, and sending a member's chat to their team when that's their",
+                        "default (team_chat_default, or their own /teams chat). Starting a message with ! sends it to everyone.")
+                .define("teamChatEnabled", true);
+        BUILDER.pop();
+
+        BUILDER.push("display");
+        DISPLAY_SCOREBOARD_MIRROR = BUILDER
+                .comment("Mirror each party and server team to a vanilla scoreboard team (named hbt_ and part of the team's id), so",
+                        "the player list, name tags, vanilla clients and other mods see the teams. A player in a party leaves any",
+                        "other scoreboard team. Off: the mirrored teams are removed and the scoreboard is left alone.")
+                .define("scoreboardMirror", true);
+        DISPLAY_NAME_TAG_COLORS = BUILDER
+                .comment("With the scoreboard mirror on, colour members' names (player list, above heads, chat) in the nearest of",
+                        "vanilla's 16 team colours to their team's colour.")
+                .define("nameTagColors", true);
         BUILDER.pop();
     }
 

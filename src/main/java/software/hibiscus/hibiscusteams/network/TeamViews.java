@@ -112,14 +112,15 @@ public final class TeamViews {
 
     // The server's settings the GUI follows, and whether the player may run server teams.
     public record ServerInfo(boolean partiesEnabled, boolean alliesEnabled, boolean allowFreeToJoin, int nameMaxLength,
-            int maxMembersCap, boolean admin) {
-        public static final ServerInfo DEFAULT = new ServerInfo(true, true, true, 32, 0, false);
+            int maxMembersCap, boolean teamChatEnabled, boolean admin) {
+        public static final ServerInfo DEFAULT = new ServerInfo(true, true, true, 32, 0, true, false);
         public static final StreamCodec<ByteBuf, ServerInfo> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL, ServerInfo::partiesEnabled,
                 ByteBufCodecs.BOOL, ServerInfo::alliesEnabled,
                 ByteBufCodecs.BOOL, ServerInfo::allowFreeToJoin,
                 ByteBufCodecs.VAR_INT, ServerInfo::nameMaxLength,
                 ByteBufCodecs.VAR_INT, ServerInfo::maxMembersCap,
+                ByteBufCodecs.BOOL, ServerInfo::teamChatEnabled,
                 ByteBufCodecs.BOOL, ServerInfo::admin,
                 ServerInfo::new);
     }

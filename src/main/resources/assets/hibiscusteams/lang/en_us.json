@@ -288,5 +288,12 @@
   "hibiscusteams.configuration.expireMinutes": "Expire after (minutes)",
   "hibiscusteams.configuration.allies": "Allies",
   "hibiscusteams.configuration.countForFriendlyFire": "Allies count for friendly fire",
-  "screen.hibiscusteams.create.icon.label": "Icon: click the slot to pick an item"
+  "screen.hibiscusteams.create.icon.label": "Icon: click the slot to pick an item",
+  "hibiscusteams.error.team_chat_disabled": "Team chat is turned off on this server.",
+  "screen.hibiscusteams.members.team_chat.disabled": "Team chat is turned off on this server",
+  "hibiscusteams.configuration.showTag": "Show team tags",
+  "hibiscusteams.configuration.teamChatEnabled": "Allow team chat",
+  "hibiscusteams.configuration.display": "Display",
+  "hibiscusteams.configuration.scoreboardMirror": "Mirror to the scoreboard",
+  "hibiscusteams.configuration.nameTagColors": "Colour names"
 }
