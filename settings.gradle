@@ -8,3 +8,16 @@ pluginManagement {
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
+
+rootProject.name = 'hibiscusteams'
+
+// Develop against a local Hibiscus Lib checkout instead of the published jar, when there is one.
+// Point at it with -Phibiscuslib_dir=... or hibiscuslib_dir in ~/.gradle/gradle.properties; default ../hibiscus-lib.
+def hibiscusLib = file(providers.gradleProperty('hibiscuslib_dir').getOrElse('../hibiscus-lib'))
+if (hibiscusLib.isDirectory()) {
+    includeBuild(hibiscusLib) {
+        dependencySubstitution {
+            substitute module('software.hibiscus.hibiscuslib:hibiscuslib') using project(':')
+        }
+    }
+}

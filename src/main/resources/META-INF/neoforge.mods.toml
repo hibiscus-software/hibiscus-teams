@@ -5,16 +5,16 @@ issueTrackerURL="https://github.com/hibiscus-software/hibiscus-teams/issues"
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
-displayURL="https://github.com/hibiscus-software/hibiscus-teams"
 authors="Hibiscus Software"
+displayURL="https://github.com/hibiscus-software/hibiscus-teams"
 description='''
-Teams for Minecraft.
+Player teams: parties with ranks, invites and allies, server teams, team chat and friendly fire, through a small GUI and a full command set. Implements the Hibiscus Lib Teams API.
 '''
 
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
-    versionRange="[${neo_version},)"
+    versionRange="${neo_version_range}"
     ordering="NONE"
     side="BOTH"
 
@@ -23,4 +23,12 @@ Teams for Minecraft.
     type="required"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
+    side="BOTH"
+
+# AFTER: Hibiscus Lib constructs first, so TeamsApi.install replaces the fallback it has already set.
+[[dependencies.${mod_id}]]
+    modId="hibiscuslib"
+    type="required"
+    versionRange="[1.1.0,)"
+    ordering="AFTER"
     side="BOTH"

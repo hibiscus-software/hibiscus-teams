@@ -8,7 +8,8 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version
+// Full version is <mod_version>+<minecraft_version>, e.g. 1.0.0+26.3 (SemVer build metadata).
+version = "${mod_version}+${minecraft_version}"
 group = mod_group_id
 
 sourceSets.main.resources {
@@ -18,11 +19,30 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache")
 }
 
+repositories {
+    // Hibiscus Lib (docs/DEPENDING.md in its repository). GitHub Packages needs a token even for public packages.
+    maven {
+        name = 'HibiscusLib'
+        url = 'https://maven.pkg.github.com/hibiscus-software/hibiscus-lib'
+        credentials {
+            // Locally: gpr.user / gpr.key in ~/.gradle/gradle.properties (a token with read:packages).
+            // In GitHub Actions: the workflow's GITHUB_ACTOR and GITHUB_TOKEN.
+            username = providers.gradleProperty('gpr.user').orElse(providers.environmentVariable('GITHUB_ACTOR')).getOrNull()
+            password = providers.gradleProperty('gpr.key').orElse(providers.environmentVariable('GITHUB_TOKEN')).getOrNull()
+        }
+        content { includeGroup 'software.hibiscus.hibiscuslib' }
+    }
+}
+
 base {
     archivesName = mod_id
 }
 
+// Mojang ships Java 25 to end users in 26.3, so mods should target Java 25.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+// Hibiscus Lib's gametests run alongside ours, so a change here can't quietly break what Lib promises.
+def gameTestNamespaces = "${mod_id},hibiscuslib"
 
 runs {
     configureEach {
@@ -35,16 +55,17 @@ runs {
     }
 
     client {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        systemProperty 'neoforge.enabledGameTestNamespaces', gameTestNamespaces
     }
 
     server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        systemProperty 'neoforge.enabledGameTestNamespaces', gameTestNamespaces
         argument '--nogui'
     }
 
+    // Launches GameTestServer, runs every registered gametest, then exits.
     gameTestServer {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        systemProperty 'neoforge.enabledGameTestNamespaces', gameTestNamespaces
     }
 
     clientData {
@@ -59,6 +80,8 @@ configurations {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+    // The whole library: button bar, GUI toolkit, helpers and the Teams API. Loaded as a mod in dev runs.
+    implementation "software.hibiscus.hibiscuslib:hibiscuslib:${hibiscuslib_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -66,10 +89,11 @@ tasks.withType(ProcessResources).configureEach {
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
-            mod_version            : mod_version,
+            mod_version            : project.version,
     ]
     inputs.properties replaceProperties
 
@@ -81,13 +105,31 @@ tasks.withType(ProcessResources).configureEach {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            artifactId = mod_id
             from components.java
+            // Consumers have Minecraft and NeoForge already, so the POM lists no dependencies.
+            pom.withXml { asNode().dependencies*.replaceNode {} }
         }
     }
     repositories {
+        // ./gradlew publishAllPublicationsToProjectRepository: a local file repo under repo/ (git-ignored).
         maven {
-            url "file://${project.projectDir}/repo"
+            name = 'project'
+            url = "file://${project.projectDir}/repo"
         }
+    }
+}
+
+// No Gradle module metadata: it would list NeoForge as a dependency, which consumers already have.
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
+}
+
+// Ship the MIT license inside the mod jar.
+tasks.named('jar', Jar).configure {
+    def licenseName = "LICENSE_${mod_id}"
+    from('LICENSE') {
+        rename { licenseName }
     }
 }
 

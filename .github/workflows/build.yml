@@ -26,5 +26,27 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # Hibiscus Lib comes from GitHub Packages, which needs a token even for public packages: the organisation's
+      # HIBISCUS_PACKAGES_TOKEN (read:packages) if it's set, else this workflow's own token.
       - name: Build with Gradle
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.HIBISCUS_PACKAGES_TOKEN || github.token }}
         run: ./gradlew build
+
+      # The same game tests release.yml runs (Hibiscus Teams' and Hibiscus Lib's), so a failure shows up here rather
+      # than on a pushed tag.
+      - name: Run game tests
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.HIBISCUS_PACKAGES_TOKEN || github.token }}
+        run: ./gradlew runGameTestServer
+
+      # Every build's jar, downloadable from the run's Summary page for 30 days.
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: hibiscusteams-${{ github.sha }}
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 30
